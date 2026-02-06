@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Important Documents</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+      transition: background 0.6s ease;
+    }
+
+    body.official {
+      background: #f2f2f2;
+    }
+
+    body.valentine {
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    }
+
+    .card {
+      background: white;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 440px;
+    }
+
+    h1 {
+      color: #e63946;
+    }
+
+    body.official h1 {
+      color: #333;
+    }
+
+    button {
+      margin: 10px;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 20px;
+      background: #e63946;
+      color: white;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    body.official button {
+      background: #444;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .activity-btn {
+      opacity: 0.6;
+    }
+
+    .activity-btn.selected {
+      opacity: 1;
+    }
+
+    input {
+      padding: 10px;
+      width: 85%;
+      border-radius: 15px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body class="official">
+
+<div class="card" id="card">
+  <h1>Important Notice</h1>
+  <p style="font-size:14px;">
+    You are going to receive a series of questions that must be answered
+    <strong>honestly</strong> and to the best of your ability.
+  </p>
+
+  <p style="font-size:12px; color:#666;">
+    Failure to comply may result in legal action.
+  </p>
+
+  <button onclick="startValentine()">Continue</button>
+</div>
+
+<script>
+  let dinner = "";
+  let activities = [];
+  let drinkChoice = "";
+
+  function startValentine() {
+    document.body.className = "valentine";
+    document.getElementById("card").innerHTML = `
+      <h1>Hey ❤️</h1>
+      <p>
+        We're one week out from seeing each other.<br><br>
+        When you get in late <strong>Friday, February 13th</strong> to our Baecae,
+        what sounds good to walk through the door to?
+      </p>
+
+      <button onclick="food('Takeout Chinese')">🥡 Takeout Chinese</button>
+      <button onclick="food('Pizza')">🍕 Pizza</button>
+      <button onclick="food('Room Service')">🏨 Room Service</button>
+
+      <br><br>
+      <input id="customFood" placeholder="Something else you’re craving…" />
+      <br><br>
+      <button onclick="customFood()">Submit 💌</button>
+    `;
+  }
+
+  function food(choice) {
+    dinner = choice;
+    activities = [];
+
+    let customText = `${choice} sounds great!<br><br>
+      Now that her belly is full, and after she is a clean girl and gets the airport stink off, select all that you would like to do.`;
+
+    // Custom messages for preset food choices
+    if (choice === "Takeout Chinese") {
+      customText = "oooo some china. I will make sure we have a good spread before you get to me.<br><br>" +
+                   "Now that her belly is full, and after she is a clean girl and gets the airport stink off, select all that you would like to do.";
+    } else if (choice === "Pizza") {
+      customText = "Nice choice, a pizza is super easy to get and I know some good spots relatively close to us.<br><br>" +
+                   "Now that her belly is full, and after she is a clean girl and gets the airport stink off, select all that you would like to do.";
+    } else if (choice === "Room Service") {
+      customText = "yay I get to belax and get service too, but I had no problem running around yo make your night perfect.<br><br>" +
+                   "Now that her belly is full, and after she is a clean girl and gets the airport stink off, select all that you would like to do.";
+    }
+
+    document.getElementById("card").innerHTML = `
+      <h1>Sounds perfect 😌</h1>
+      <p>${customText}</p>
+
+      <p>(Select all that apply)</p>
+
+      <button class="activity-btn" onclick="toggleActivity(this, 'Movie')">🎬 A movie</button>
+      <button class="activity-btn" onclick="toggleActivity(this, 'A Knight of the Seven Kingdoms')">🏰 A Knight of the Seven Kingdoms</button>
+      <button class="activity-btn" onclick="toggleActivity(this, 'Cuddle and be friends')">🤍 Cuddle and be friends</button>
+
+      <br><br>
+      <button onclick="confirmActivities()">Next 💌</button>
+    `;
+  }
+
+  function customFood() {
+    const input = document.getElementById("customFood").value.trim();
+    if (input) food(input);
+  }
+
+  function toggleActivity(button, activity) {
+    if (activities.includes(activity)) {
+      activities = activities.filter(a => a !== activity);
+      button.classList.remove("selected");
+    } else {
+      activities.push(activity);
+      button.classList.add("selected");
+    }
+  }
+
+  function confirmActivities() {
+    document.getElementById("card").innerHTML = `
+      <h1>I love this plan ❤️</h1>
+      <p>${dinner}<br>${activities.join(" + ")}</p>
+
+      <p>What would you like to go with our fatness and bae time?</p>
+
+      <p>🍹 An alcoholic treat of your choosing. Sorry, I won't be partaking, but that doesn't need to stop you from being a girl in the world. (Saturday you're taking my Amex for drinks regardless of your decision for tonight. No judgement if you wanna get tipsy both nights.😏)</p>
+      <input id="drinkInput" placeholder="Type your drink choice here…" />
+      <br><br>
+      <button onclick="submitDrink()">Submit 💕</button>
+
+      <br><br>
+      <button onclick="skipDrink()">Relax, it is going to be late and I just want to be friends, but make sure I can at least guzzle your water 💧</button>
+    `;
+  }
+
+  function submitDrink() {
+    const input = document.getElementById("drinkInput").value.trim();
+    if (!input) return alert("Tell me what you want 😏");
+    drinkChoice = input;
+    summary();
+  }
+
+  function skipDrink() {
+    drinkChoice = "Relax, just guzzling your water tonight 💧";
+    summary();
+  }
+
+  function summary() {
+    document.getElementById("card").innerHTML = `
+      <h1>Perfect ❤️</h1>
+      <p>
+        Dinner: ${dinner}<br>
+        Activities: ${activities.join(" + ")}<br>
+        Drinks: ${drinkChoice}
+      </p>
+
+      <p>Will you be my Valentine?</p>
+
+      <button onclick="finalScreen()">Yes</button>
+      <button onclick="finalScreen()">Duh, look at all the effort my boyfriend puts into our fun weekend</button>
+    `;
+  }
+
+  function finalScreen() {
+    document.getElementById("card").innerHTML = `
+      <h1>Happy Valentine’s Weekend! ❤️</h1>
+      <p>I can’t wait to spend our first Valentine’s Day together.</p>
+      <p>I love you dearly.</p>
+    `;
+  }
+</script>
+
+</body>
+</html>
